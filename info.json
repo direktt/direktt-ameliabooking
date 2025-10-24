@@ -1,0 +1,18 @@
+{
+	"name" : "Direktt Amelia Booking Integration",
+	"slug" : "direktt-ameliabooking",
+	"author" : "<a href='https://direktt.com'>Direktt</a>",
+	"author_profile" : "https://direktt.com",
+	"version" : "1.0.0",
+	"download_url" : "https://github.com/direktt/direktt-ameliabooking/releases/download/v1.0.0/direktt-ameliabooking.zip",
+	"requires" : "5.6",
+	"tested" : "6.8.3",
+	"requires_php" : "8.0",
+	"homepage" : "https://direktt.com",
+    "last_updated" : "10/24/2025",
+	"sections" : {
+		"description" : "Direktt Amelia Booking Integration Addon",
+		"installation" : "Click the Activate button and that's it",
+		"changelog" : "1.0.0 Initial Release Debug"
+	}
+}
