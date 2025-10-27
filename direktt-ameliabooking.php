@@ -32,6 +32,12 @@ add_filter( 'upgrader_process_complete', array( $direktt_ameliabooking_plugin_gi
 
 add_action( 'plugins_loaded', 'direktt_ameliabooking_activation_check', -20 );
 
+// Add settings page
+add_action( 'direktt_setup_settings_pages', 'direktt_ameliabooking_setup_settings_page' );
+
+// Enqueue script for hiding last name and email fields
+add_action( 'wp_enqueue_scripts', 'direktt_ameliabooking_enqueue_fe_scripts' );
+
 function direktt_ameliabooking_activation_check() {
     if ( ! function_exists( 'is_plugin_active' ) ) {
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -68,6 +74,100 @@ function direktt_ameliabooking_activation_check() {
             },
             10,
             0
+        );
+    }
+}
+
+function direktt_ameliabooking_setup_settings_page() {
+    Direktt::add_settings_page(
+        array(
+            'id'       => 'review',
+            'label'    => esc_html__( 'Amelia Booking Settings', 'direktt-ameliabooking' ),
+            'callback' => 'direktt_ameliabooking_render_settings_page',
+            'priority' => 2,
+        )
+    );
+}
+
+function direktt_ameliabooking_render_settings_page() {
+    $success = false;
+
+    // Handle form submission
+    if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['direktt_ameliabooking_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['direktt_ameliabooking_nonce'] ) ), 'direktt_ameliabooking_save' ) ) {
+        // update options based on form submission
+        $success = true;
+    }
+
+    // Load stored values
+
+    // Query for template posts
+    $template_args  = array(
+        'post_type'      => 'direkttmtemplates',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- - Justification: bounded, cached, selective query on small dataset
+            array(
+                'key'     => 'direkttMTType',
+                'value'   => array( 'all', 'none' ),
+                'compare' => 'IN',
+            ),
+        ),
+    );
+    $template_posts = get_posts( $template_args );
+    ?>
+    <div class="wrap">
+        <?php if ( $success ) : ?>
+            <div class="updated notice is-dismissible">
+                <p><?php echo esc_html__( 'Settings saved successfully.', 'direktt-ameliabooking' ); ?></p>
+            </div>
+        <?php endif; ?>
+        <form method="post" action="">
+            <?php wp_nonce_field( 'direktt_ameliabooking_save', 'direktt_ameliabooking_nonce' ); ?>
+
+            <table class="form-table">
+            </table>
+            <?php submit_button( esc_html__( 'Save Settings', 'direktt-ameliabooking' ) ); ?>
+        </form>
+    </div>
+    <?php
+}
+
+function direktt_ameliabooking_enqueue_fe_scripts() {
+    global $post;
+
+    if ( ! isset( $post ) ) {
+        return;
+    }
+
+    if ( ! is_user_logged_in() ) {
+        return;
+    }
+
+    $user = wp_get_current_user();
+
+    if ( ! Direktt_User::is_wp_user_direktt_role( $user ) ) {
+        return;
+    }
+
+    if ( has_shortcode( $post->post_content, 'ameliabooking' ) ) {
+        wp_enqueue_script(
+            'direktt-ameliabooking-script',
+            plugin_dir_url( __FILE__ ) . 'assets/js/direktt-ameliabooking.js',
+            [ 'jquery' ],
+            filemtime( plugin_dir_path( __FILE__ ) . 'assets/js/direktt-ameliabooking.js' ),
+            true
+        );
+
+        $direktt_user = Direktt_User::get_direktt_user_by_wp_user( $user );
+        $display_name = $direktt_user['direktt_display_name'];
+        
+        wp_localize_script( 'direktt-ameliabooking-script',
+            'direkttAmeliaBooking',
+            array(
+                'displayName' => $display_name,
+            )
         );
     }
 }
