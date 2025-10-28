@@ -32,9 +32,6 @@ add_filter( 'upgrader_process_complete', array( $direktt_ameliabooking_plugin_gi
 
 add_action( 'plugins_loaded', 'direktt_ameliabooking_activation_check', -20 );
 
-// Add settings page
-add_action( 'direktt_setup_settings_pages', 'direktt_ameliabooking_setup_settings_page' );
-
 // Enqueue script for hiding last name and email fields
 add_action( 'wp_enqueue_scripts', 'direktt_ameliabooking_enqueue_fe_scripts' );
 
