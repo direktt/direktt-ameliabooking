@@ -92,7 +92,7 @@ function direktt_ameliabooking_enqueue_fe_scripts() {
         return;
     }
 
-    if ( has_shortcode( $post->post_content, 'ameliabooking' ) || has_shortcode( $post->post_content, 'ameliastepbooking' ) || has_shortcode( $post->post_content, 'ameliacatalogbooking' ) ) {
+    if ( has_shortcode( $post->post_content, 'ameliabooking' ) || has_shortcode( $post->post_content, 'ameliacatalog' ) || has_shortcode( $post->post_content, 'ameliastepbooking' ) || has_shortcode( $post->post_content, 'ameliacatalogbooking' ) ) {
         wp_enqueue_script(
             'direktt-ameliabooking-script',
             plugin_dir_url( __FILE__ ) . 'assets/js/direktt-ameliabooking.js',
@@ -112,11 +112,12 @@ function direktt_ameliabooking_enqueue_fe_scripts() {
             )
         );
 
-        if ( has_shortcode( $post->post_content, 'ameliabooking' ) ) {
+        if ( has_shortcode( $post->post_content, 'ameliabooking' ) || has_shortcode( $post->post_content, 'ameliacatalog' ) ) {
             wp_localize_script( 'direktt-ameliabooking-script',
                 'direkttAM',
                 array(
                     'type' => 1,
+                    'user' => $user->user_login,
                 )
             );
         } elseif ( has_shortcode( $post->post_content, 'ameliastepbooking' ) || has_shortcode( $post->post_content, 'ameliacatalogbooking' ) ) {
@@ -124,7 +125,7 @@ function direktt_ameliabooking_enqueue_fe_scripts() {
                 'direkttAM',
                 array(
                     'type' => 2,
-                    'user' => $user->user_login
+                    'user' => $user->user_login,
                 )
             );
         }

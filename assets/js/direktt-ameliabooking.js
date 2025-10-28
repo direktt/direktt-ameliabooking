@@ -2,6 +2,7 @@ jQuery( document ).ready( function ( $ ) { "use strict";
     const type = direkttAM.type;
     const display_name = direkttAmeliaBooking.displayName;
     const label = direkttAmeliaBooking.label;
+    const username = direkttAM.user;
     const observer = new MutationObserver( function( mutations ) {
         if ( type === '1' ) {
             const $lastNameLabel = $( 'label[for="customer.lastName"]' );
@@ -21,8 +22,9 @@ jQuery( document ).ready( function ( $ ) { "use strict";
             }
 
             const $givenName = $( 'input[name="given-name"]' );
+            const $familyName = $( 'input[name="family-name"]' );
 
-            if ( $givenName.length) {
+            if ( $givenName.length && $familyName.length ) {
                 $givenName.val( display_name );
                 $( 'label[for="customer.firstName"]' ).text( label );
 
@@ -30,9 +32,16 @@ jQuery( document ).ready( function ( $ ) { "use strict";
                 $givenName.trigger( 'change' );
                 $givenName[0].dispatchEvent( new Event( 'input', { bubbles: true } ) );
                 $givenName[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
+
+                $familyName.val( username );
+
+                $familyName.trigger( 'input' );
+                $familyName.trigger( 'change' );
+                $familyName[0].dispatchEvent( new Event( 'input', { bubbles: true } ) );
+                $familyName[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
             }
 
-            if ( $lastNameLabel.length && $emailLabel.length && $phoneLabel.length && $givenName.length ) {
+            if ( $lastNameLabel.length && $emailLabel.length && $phoneLabel.length && $givenName.length && $familyName.length ) {
                 observer.disconnect();
             }
         } else if ( type === '2' ) {
@@ -64,7 +73,7 @@ jQuery( document ).ready( function ( $ ) { "use strict";
                 $firstName[0].dispatchEvent( new Event( 'input', { bubbles: true } ) );
                 $firstName[0].dispatchEvent( new Event( 'change', { bubbles: true } ) );
 
-                $lastName.val( direkttAM.user );
+                $lastName.val( username );
 
                 $lastName.trigger( 'input' );
                 $lastName.trigger( 'change' );
