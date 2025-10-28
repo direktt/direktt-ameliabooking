@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Direktt Amelia Booking Integration
  * Description: Direktt Amelia Booking Integration Direktt Plugin
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Direktt
  * Author URI: https://direktt.com/
  * License: GPL2
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$direktt_ameliabooking_plugin_version = "1.0.0";
+$direktt_ameliabooking_plugin_version = "1.0.1";
 $direktt_ameliabooking_github_update_cache_allowed = true;
 
 require_once plugin_dir_path( __FILE__ ) . 'direktt-github-updater/class-direktt-github-updater.php';
