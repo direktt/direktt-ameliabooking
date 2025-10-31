@@ -66,7 +66,8 @@ jQuery( document ).ready( function ( $ ) { "use strict";
 
             if ( $firstName.length && $lastName.length ) {
                 $firstName.val( display_name );
-                $firstName.parent().parent().parent().parent().parent().find( 'label' ).find( 'span' ).text( label );
+                $firstName.parents( '.am-input' ).addClass( 'is-disabled' );
+                $firstName.parents( '.am-info-first-name' ).find( 'label' ).find( 'span' ).text( label );
 
                 $firstName.trigger( 'input' );
                 $firstName.trigger( 'change' );
